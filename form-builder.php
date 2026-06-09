@@ -181,9 +181,12 @@ require_once __DIR__ . '/includes/sidebar.php';
 </form>
 
 <script>
-const EDIT_FIELDS      = <?= ($editForm && $editForm->fields) ? $editForm->fields : '[]' ?>;
-const EDIT_DESTINATION = '<?= htmlspecialchars(($editForm ? $editForm->destination : null) ?? 'leads') ?>';
+var EDIT_FIELDS, EDIT_DESTINATION;
+try {
+    EDIT_FIELDS = <?= ($editForm && $editForm->fields) ? $editForm->fields : '[]' ?>;
+} catch(e) { EDIT_FIELDS = []; }
+EDIT_DESTINATION = '<?= htmlspecialchars(($editForm ? $editForm->destination : null) ?? 'leads') ?>';
 </script>
-<script src="/assets/js/pages/form-builder.js"></script>
+<script src="<?= BASE_PATH ?>/assets/js/pages/form-builder.js"></script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

@@ -2,7 +2,7 @@
 
 let formFields     = [];
 let selectedIndex  = -1;
-let currentDest    = EDIT_DESTINATION || 'leads';
+let currentDest    = (typeof EDIT_DESTINATION !== 'undefined' && EDIT_DESTINATION) ? EDIT_DESTINATION : 'leads';
 
 const FIELD_DEFAULTS = {
     text:      { label: 'Short Text',      placeholder: 'Enter text...',       required: false, mapping: 'custom' },
@@ -79,8 +79,9 @@ const DEFAULT_FIELDS = [
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    if (Array.isArray(EDIT_FIELDS) && EDIT_FIELDS.length) {
-        formFields = EDIT_FIELDS;
+    var loadedFields = (typeof EDIT_FIELDS !== 'undefined') ? EDIT_FIELDS : [];
+    if (Array.isArray(loadedFields) && loadedFields.length) {
+        formFields = loadedFields;
     } else {
         // New form — pre-populate with default fields
         formFields = JSON.parse(JSON.stringify(DEFAULT_FIELDS));

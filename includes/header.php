@@ -36,29 +36,29 @@ if (empty($_SESSION['csrf_token'])) {
             animation: kSidebarIn 0.45s cubic-bezier(.16,1,.3,1) both;
         }
 
-        /* Default: content blocks slide up — JS sets per-block delay */
-        #page-content > * {
+        /* Default: visual content blocks — JS adds .page-item + sets delay */
+        .page-item {
             opacity: 0;
             animation: kSlideUp 0.45s cubic-bezier(.16,1,.3,1) both;
         }
 
         /* Detail / view pages → slide from right */
-        body[data-page="profile"]      #page-content > *,
-        body[data-page="lead details"] #page-content > *,
-        body[data-page="quotation"]    #page-content > *,
-        body[data-page="invoice"]      #page-content > *,
-        body[data-page="view invoice"] #page-content > *,
-        body[data-page="view quotation"] #page-content > * {
+        body[data-page="profile"]        .page-item,
+        body[data-page="lead details"]   .page-item,
+        body[data-page="quotation"]      .page-item,
+        body[data-page="invoice"]        .page-item,
+        body[data-page="view invoice"]   .page-item,
+        body[data-page="view quotation"] .page-item {
             animation-name: kSlideRight;
         }
 
         /* Config / builder pages → scale in */
-        body[data-page="settings"]         #page-content > *,
-        body[data-page="form builder"]     #page-content > *,
-        body[data-page="create quotation"] #page-content > *,
-        body[data-page="create invoice"]   #page-content > *,
-        body[data-page="backup"]           #page-content > *,
-        body[data-page="changelog"]        #page-content > * {
+        body[data-page="settings"]           .page-item,
+        body[data-page="form builder"]       .page-item,
+        body[data-page="create quotation"]   .page-item,
+        body[data-page="create invoice"]     .page-item,
+        body[data-page="backup"]             .page-item,
+        body[data-page="changelog"]          .page-item {
             animation-name: kScaleIn;
             animation-duration: 0.4s;
         }

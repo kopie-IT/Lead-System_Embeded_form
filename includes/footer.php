@@ -57,10 +57,15 @@
 <script>
     // ── Page entrance stagger ──────────────────────────────────────────────────
     (function () {
-        // Stagger direct children of #page-content
+        // Only animate visual block elements — skip <script>, <style>, <link> etc.
+        var VISUAL = ['DIV','FORM','SECTION','ARTICLE','TABLE','HEADER','NAV','ASIDE'];
         var pc = document.getElementById('page-content');
         if (pc) {
-            Array.from(pc.children).forEach(function (el, i) {
+            var visualChildren = Array.from(pc.children).filter(function (el) {
+                return VISUAL.indexOf(el.tagName) !== -1;
+            });
+            visualChildren.forEach(function (el, i) {
+                el.classList.add('page-item');
                 el.style.animationDelay = (0.05 + i * 0.09) + 's';
             });
         }

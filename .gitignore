@@ -1,0 +1,26 @@
+# Logs
+logs/*.log
+logs/
+*.log
+
+# Backups
+backups/
+
+# Uploads
+uploads/
+
+# Environment / secrets
+.env
+.env.*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Temp
+*.tmp
+*.swp

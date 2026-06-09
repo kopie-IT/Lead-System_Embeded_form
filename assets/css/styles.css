@@ -1,0 +1,23 @@
+.material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+            color: #785a00;
+        }
+        .hero-gradient {
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0) 100%);
+        }
+        .text-underline-expand {
+            position: relative;
+        }
+        .text-underline-expand::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 32px;
+            height: 1px;
+            background-color: #785a00;
+            transition: width 0.3s ease;
+        }
+        .text-underline-expand:hover::after {
+            width: 100%;
+        }

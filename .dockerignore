@@ -1,0 +1,20 @@
+# Version control
+.git
+.gitignore
+
+# Documentation
+doc/
+README.md
+
+# Dependencies
+node_modules/
+package.json
+package-lock.json
+
+# Docker files
+Dockerfile
+.dockerignore
+
+# Runtime generated
+backups/
+logs/

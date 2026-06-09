@@ -58,11 +58,12 @@
     // ── Page entrance stagger ──────────────────────────────────────────────────
     (function () {
         // Only animate visual block elements — skip <script>, <style>, <link> etc.
+        // Also skip elements marked data-no-anim (e.g. form-builder canvas)
         var VISUAL = ['DIV','FORM','SECTION','ARTICLE','TABLE','HEADER','NAV','ASIDE'];
         var pc = document.getElementById('page-content');
         if (pc) {
             var visualChildren = Array.from(pc.children).filter(function (el) {
-                return VISUAL.indexOf(el.tagName) !== -1;
+                return VISUAL.indexOf(el.tagName) !== -1 && !el.hasAttribute('data-no-anim');
             });
             visualChildren.forEach(function (el, i) {
                 el.classList.add('page-item');

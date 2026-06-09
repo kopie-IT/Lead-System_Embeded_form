@@ -7,11 +7,16 @@ $editForm = null;
 $editId   = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save_form') {
+    // Sanitise fields_json — guard against empty string which fails JSON column validation
+    $fields_json = trim($_POST['fields_json'] ?? '');
+    if (empty($fields_json) || json_decode($fields_json) === null) {
+        $fields_json = '[]';
+    }
     $data = [
         'title'       => trim($_POST['title'] ?? 'Untitled Form'),
         'description' => trim($_POST['description'] ?? ''),
         'destination' => $_POST['destination'] ?? 'leads',
-        'fields'      => $_POST['fields_json'] ?? '[]',
+        'fields'      => $fields_json,
         'settings'    => json_encode([
             'success_message' => trim($_POST['success_message'] ?? 'Thank you! Your submission has been received.'),
             'redirect_url'    => trim($_POST['redirect_url'] ?? ''),
@@ -60,6 +65,13 @@ require_once __DIR__ . '/includes/sidebar.php';
 .field-type-btn:hover { background: #005abe; color: white; border-color: #005abe; }
 </style>
 
+<?php
+// Safe accessors — avoids PHP warnings when $editForm is null (new form)
+$ef_title  = $editForm ? htmlspecialchars($editForm->title)       : '';
+$ef_desc   = $editForm ? htmlspecialchars($editForm->description) : '';
+$ef_dest   = $editForm ? $editForm->destination                   : 'leads';
+?>
+
 <div class="flex items-center gap-3 mb-5 -mt-1">
     <a href="<?= BASE_PATH ?>/forms.php" class="flex items-center gap-1 text-sm text-black/40 hover:text-black transition-colors">
         <span class="material-symbols-outlined text-sm">arrow_back</span> Forms
@@ -68,7 +80,7 @@ require_once __DIR__ . '/includes/sidebar.php';
     <span class="text-sm font-semibold text-black"><?= $editForm ? htmlspecialchars($editForm->title) : 'New Form' ?></span>
 </div>
 
-<form method="POST" id="builder-form" data-no-loading>
+<form method="POST" id="builder-form" data-no-loading data-no-anim>
     <input type="hidden" name="action" value="save_form">
     <input type="hidden" name="form_id" value="<?= $editId ?? '' ?>">
     <input type="hidden" name="fields_json" id="fields_json" value="">
@@ -77,7 +89,7 @@ require_once __DIR__ . '/includes/sidebar.php';
     <div class="bg-white border border-outline-variant rounded-xl p-4 mb-4 flex flex-wrap items-end gap-3 w-full">
         <div class="flex-1 min-w-44">
             <label class="block text-xs font-bold text-black/40 uppercase tracking-wider mb-1">Form Title *</label>
-            <input type="text" name="title" id="form-title" value="<?= htmlspecialchars($editForm->title ?? '') ?>"
+            <input type="text" name="title" id="form-title" value="<?= $ef_title ?>"
                    placeholder="e.g. Contact Us" required
                    class="w-full border border-outline-variant rounded-lg px-3 py-2 text-sm font-semibold focus:border-[#005abe] outline-none">
         </div>
@@ -85,14 +97,14 @@ require_once __DIR__ . '/includes/sidebar.php';
             <label class="block text-xs font-bold text-black/40 uppercase tracking-wider mb-1">Destination</label>
             <select name="destination" id="form-destination" onchange="onDestinationChange(this.value)"
                     class="w-full border border-outline-variant rounded-lg px-3 py-2 text-sm focus:border-[#005abe] outline-none">
-                <option value="leads"         <?= ($editForm->destination ?? '') === 'leads'         ? 'selected' : '' ?>>Leads Inquiries</option>
-                <option value="leads_profile" <?= ($editForm->destination ?? '') === 'leads_profile' ? 'selected' : '' ?>>Leads Profile</option>
-                <option value="careers"       <?= ($editForm->destination ?? '') === 'careers'       ? 'selected' : '' ?>>Career Applications</option>
+                <option value="leads"         <?= $ef_dest === 'leads'         ? 'selected' : '' ?>>Leads Inquiries</option>
+                <option value="leads_profile" <?= $ef_dest === 'leads_profile' ? 'selected' : '' ?>>Leads Profile</option>
+                <option value="careers"       <?= $ef_dest === 'careers'       ? 'selected' : '' ?>>Career Applications</option>
             </select>
         </div>
         <div class="flex-1 min-w-44">
             <label class="block text-xs font-bold text-black/40 uppercase tracking-wider mb-1">Description</label>
-            <input type="text" name="description" value="<?= htmlspecialchars($editForm->description ?? '') ?>"
+            <input type="text" name="description" value="<?= $ef_desc ?>"
                    placeholder="Optional description shown on the form"
                    class="w-full border border-outline-variant rounded-lg px-3 py-2 text-sm focus:border-[#005abe] outline-none">
         </div>
@@ -107,7 +119,7 @@ require_once __DIR__ . '/includes/sidebar.php';
         </button>
     </div>
 
-    <!-- Row 2: Palette + Canvas (full width) -->
+<!-- Row 2: Palette + Canvas (full width) -->
     <div class="flex gap-4 mb-4 w-full" style="height: calc(100vh - 310px);">
 
         <!-- Left: Field Palette -->
@@ -132,7 +144,7 @@ require_once __DIR__ . '/includes/sidebar.php';
             </div>
         </div>
 
-        <!-- Canvas (full width, no right panel) -->
+        <!-- Canvas -->
         <div class="flex-1 bg-white border border-outline-variant rounded-xl overflow-y-auto">
             <div class="p-6">
                 <div id="form-canvas" class="space-y-2 min-h-48"></div>

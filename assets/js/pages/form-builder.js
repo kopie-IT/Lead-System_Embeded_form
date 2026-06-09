@@ -266,7 +266,14 @@ function settingRow(label, content) {
 // ── Field Updates ─────────────────────────────────────────────────────────────
 function updateField(index, key, value) {
     formFields[index][key] = value;
-    renderCanvas();
+    // Re-render only the specific card — avoids wiping focus from settings inputs
+    var canvas = document.getElementById('form-canvas');
+    var cards  = canvas.querySelectorAll('.field-card');
+    if (cards[index]) {
+        var tmp = document.createElement('div');
+        tmp.innerHTML = renderFieldCard(formFields[index], index);
+        canvas.replaceChild(tmp.firstElementChild, cards[index]);
+    }
 }
 
 function addOption(index) {

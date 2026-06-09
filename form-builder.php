@@ -38,9 +38,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'save_
 if (isset($_GET['id'])) {
     $editId   = (int)$_GET['id'];
     $editForm = $formCtrl->getById($editId);
+    if (!$editForm) {
+        $_SESSION['app_modal'] = ['type' => 'error', 'message' => 'Form not found.'];
+        header("Location: " . BASE_PATH . "/forms.php");
+        exit;
+    }
 }
 
-$settings = json_decode($editForm->settings ?? '{}', true) ?: [];
+$settings = json_decode(($editForm ? $editForm->settings : null) ?? '{}', true) ?: [];
 
 $page_title = 'Form Builder';
 require_once __DIR__ . '/includes/header.php';
@@ -176,8 +181,8 @@ require_once __DIR__ . '/includes/sidebar.php';
 </form>
 
 <script>
-const EDIT_FIELDS      = <?= $editForm ? $editForm->fields : '[]' ?>;
-const EDIT_DESTINATION = '<?= htmlspecialchars($editForm->destination ?? 'leads') ?>';
+const EDIT_FIELDS      = <?= ($editForm && $editForm->fields) ? $editForm->fields : '[]' ?>;
+const EDIT_DESTINATION = '<?= htmlspecialchars(($editForm ? $editForm->destination : null) ?? 'leads') ?>';
 </script>
 <script src="/assets/js/pages/form-builder.js"></script>
 

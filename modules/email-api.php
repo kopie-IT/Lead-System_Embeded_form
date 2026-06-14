@@ -76,7 +76,7 @@ function _smtpSend(
     string $subject, string $body,
     string $encryption = 'tls'
 ): void {
-    $timeout = 30;
+    $timeout = 10;
     $ctx = stream_context_create(['ssl' => [
         'verify_peer'      => false,
         'verify_peer_name' => false,
